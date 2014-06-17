@@ -1,0 +1,61 @@
+#!/bin/sh
+## configure.sh for bistromthique in /u/a1/legros_b/c/rendu/mp/myls/list
+##
+## Made by bruno legros
+## Login   <legros_b@epita.fr>
+##
+## Started on  Thu Oct 17 14:03:00 2002 bruno legros
+## Last update Sat Nov  9 22:52:38 2002 bruno legros
+##
+
+case `uname -s` in
+  OSF* )
+    CC=gcc
+    WARN='-Wall -W -ansi -pedantic'
+    LDDEBUG=''
+    RM='gnu-rm -f'
+    DEF='-DOSF'
+    OPTI='-O3 -fomit-frame-pointer'
+    ;;
+  SunOS* )
+    CC=gcc
+    WARN='-Wall -W -ansi -pedantic'
+    LDDEBUG=''
+    DEF='-DSUN'
+    RM='rm -f'
+    OPTI='-O3 -fomit-frame-pointer'
+    ;;
+  NetBSD* )
+    CC=gcc
+    WARN='-Wall -W -ansi -pedantic'
+    LDDEBUG=''
+    DEF='-DNETBSD'
+    RM='rm -f'
+    OPTI='-O3 -fomit-frame-pointer'
+    ;;
+  * )
+    # check for gcc presence
+    if gcc --version >/dev/null 2>&1; then
+      CC=gcc
+      WARN='-Wall -W -ansi -pedantic'
+      LDDEBUG=''
+      DEF='-D__USE_BSD'
+      RM='rm -f'
+      OPTI='-O3 -fomit-frame-pointer'
+    else
+      CC=cc
+      WARN=''
+      LDDEBUG=''
+      RM='rm -f'
+    fi
+    ;;
+esac
+
+OUT=Makefile-rules.make
+echo >"$OUT"
+echo "CC = $CC" >>"$OUT"
+echo "WARN = $WARN" >>"$OUT"
+echo "LDDEBUG = $LDDEBUG" >>"$OUT"
+echo "DEF = $DEF" >>"$OUT"
+echo "RM = $RM" >>"$OUT"
+echo "OPTI = $OPTI" >> "$OUT"

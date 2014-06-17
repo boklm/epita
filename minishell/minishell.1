@@ -1,0 +1,62 @@
+.\" Process this file with
+.\" groff -man -Tascii foo.1
+.\"
+.TH MINISHELL 1 "NOVEMBER 2002" "User Manual"
+.SH NAME
+minishell \- minimal shell
+.SH SYNOPSIS
+.B minishell
+.SH DESCRIPTION
+.B minishell
+is simply a useless minimal shell.
+.SH OPTIONS
+There is no options at the moment.
+.SH HOW TO USE IT
+.BR "Command line"
+.RS
+To run a program, enter its name on the commande line. If you do not want to wait for the end of the programme, you can add the charactere & at the end of your command. Example :
+.RS
+emacs &
+.RE
+.RE
+.BR Redirections
+.RS
+It is possible to redirect input and output for a program. To redirect the output of your command to a file, use the charactere \> :
+.RS
+ls > ls.log
+.RE
+If the file does not exist, it will be created, if the file aldready exist, it will be overwritten. If you don't want to ovewrite your file, use \>\> and the output will be appended at the en of the file :
+.RS
+ls >> ls.log
+.RE
+If you want to redirect input from a file, use the caractere \< :
+.RS
+cat < ls.log
+.RE
+The shell will open the file ls.log and send the data to the program cat.
+If you want to redirect output from one program to the output of an other one, use the charactere \| :
+.RS
+cat bigfile | more
+.RE
+.RE
+.BR "Dynamic libraries"
+.RS
+It is possible to load separates libraries with the
+.I load
+command followed by the filepath :
+.RS
+load ./cd.so
+.RE
+This will load the librarie cd.so, the command cd should now be avaible.
+To unable one librarie use the
+.I unload
+command followed by the command name :
+.RS
+unload cd
+.RE
+.RE
+.SH BUGS
+Dynamic library are not working on at least SunOS.
+Some others unknown bugs might exist.
+.SH AUTHOR
+Nicolas Vigier <vigier_n@epita.fr>

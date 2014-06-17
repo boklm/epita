@@ -1,0 +1,145 @@
+Date de Rendu:		05/10/2002 à 23:42
+Groupe de News:         epita.cours.c-unix.mini-projs
+Répertoire de Rendu:    ~/c/rendu/piscine/j10
+Droits:                 701 pour ~
+			705 pour les autres répertoires
+                        604 pour les fichiers de ~/c/rendu/piscine/j10
+Ne pas oublier:         Lire le sujet jusqu'au bout.
+			Aider vos camarades en leur donnant des explications, 
+			mais sans travailler à leur place
+
+---------------------------------
+ IMPORTANT :: MODALITES DE RENDU
+---------------------------------
+
+Toutes  les  sources du  répertoire  seront  compilées ensemble,  donc
+faites attention à ne pas définir de fonction en double. Par ailleurs,
+la fonction main() ne doit pas figurer dans votre rendu.
+
+----------------------
+ FONCTIONS AUTORISEES
+----------------------
+
+Aucune fonction extérieure à votre rendu.
+
+----------
+ EXERCICE
+----------
+
+Prototype de la fonction :
+  int my_fnmatch(const char *pattern, const char *string, int flags);
+
+La fonction my_fnmatch() vérifie si son argument `string' correspond à
+son  argument  `pattern', qui  peut  contenir  des méta-caractères  de
+shell (cf. la page de manuel glob(7)).
+
+Le   comportement  de  cette   fonction  peut   être  altéré   par  le
+positionnement des bits de l'argument `flags'. Les différents drapeaux
+sont :
+
+ MY_FNM_HANDLE_QMARK : reconnaît le méta-caractère `?'
+ MY_FNM_HANDLE_CLASSES : reconnaît les méta-classes '[...]'
+ MY_FNM_HANDLE_RANGES : reconnaît les méta-intervalles '[x-y]'
+ MY_FNM_HANDLE_COMPLEMENTS : reconnaît les méta-intervalles inversés '[!...]' 
+ MY_FNM_COUNT_MATCHES : compte le nombre de correspondances
+
+Quand  aucun  de  ces   drapeaux  n'est  positionné,  my_fnmatch()  ne
+reconnaît que le méta-caractère `*', et renvoie les valeurs suivantes :
+  0 si il n'y a pas de correspondance
+  >0 si il y a des correspondances
+
+Si l'un de  ces drapeaux est positionné mais  que my_fnmatch() ne sait
+pas le gérer, la fonction renvoie la valeur d'erreur -1.
+
+Le bon fonctionnement de my_fnmatch() vis-à-vis des différent drapeaux
+dépend de  la richesse de ses  fonctionnalités : le  but de l'exercice
+est de gérer le maximum de drapeaux.
+
+Ces  drapeaux  seront  définis  à  la correction  par  des  constantes
+préprocesseur   (#define),  qu'on   vous  donnera   dans   un  fichier
+my_fnmatch_flags.h. Pour  vos tests, vous pouvez  utiliser les valeurs
+1, 2,  6, 8, et 16  dans votre propre  fichier my_fnmatch_flags.h, que
+nous écraserons à la correction avec le nôtre.
+
+------------
+ EVALUATION
+------------
+
+Pendant l'évaluation,  chaque drapeau correctement  géré apportera une
+bonification,   tandis   que  tout   drapeau   qui   empêche  le   bon
+fonctionnement  d'un autre  apportera une  sanction. Les  drapeaux non
+gérés,   mais  qui   n'empêchent  pas   les  autres   de  fonctionner,
+n'enlèveront ni n'ajouteront de points.
+
+L'évaluation commence  à partir  du moment où  my_fnmatch() fonctionne
+sans drapeaux,  c'est-à-dire correctement vis-à-vis  du méta-caractère
+`*'.
+
+
+----------
+ EXEMPLES
+----------
+
+            Sans drapeaux        MY_FNM_COUNT_MATCHES 
+
+ string   : abba     abba        abba     ababa    abba
+ pattern  : a*a      b*b         a*a      a*a      a**a
+ résultat : >0       >0          1        3        3
+
+            Sans drapeaux        MY_FNM_HANDLE_QMARK
+
+ string   : abba     abba        abba     abba     ababa
+ pattern  : a??a     *??*        a??a     *??*     a?a
+ résultat : 0        0           >0       >0       >0   
+
+                                 MY_FNM_HANDLE_QMARK|MY_FNM_COUNT_MATCHES
+
+ string   :                      abba     abba     ababa
+ pattern  :                      a??a     *??*     a?a
+ résultat :                      1        10       2
+
+Explication sur un des exemples:
+ 
+ *??* correspond à abba des facons suivantes :
+    * = "", ?? = "ab", * = ""
+    * = "", ?? = "ab", * = "b"
+    * = "", ?? = "ab", * = "ba"
+    * = "", ?? = "bb", * = ""
+    * = "", ?? = "bb", * = "a"
+    * = "a", ?? = "bb", * = ""
+    * = "a", ?? = "bb", * = "a"
+    * = "", ?? = "ba", * = ""
+    * = "b", ?? = "ba", * = ""
+    * = "ab", ?? = "ba", * = ""
+
+ 
+
+
+
+-----------
+ REMARQUES
+-----------
+
+* Pour ceux  qui ne  l'auraient pas remarqué,  un my_fnmatch()  qui ne
+gère que  le drapeau MY_FNM_COUNT_MATCHES est  équivalent au classique
+nmatch()  épitéen. Si  vous en  voulez  le sujet,  demandez-le à  ceux
+d'entre  vous  qui ont  fait  leurs  emplettes  de sujets  de  l'année
+dernière.
+
+* Vous n'avez pas à gérer les drapeaux standard de fnmatch().
+
+* Il peut y avoir plusieurs occurences successives de `*'.
+
+* Attention,  certaines implémentations  de  fnmatch() comportent  des
+bugs, fiez-vous de préférence aux indications de glob(7).
+
+* Attention, le  motif de recherche `pattern' peut  correspondre à une
+sous-chaîne de l'argument `string' ; aussi le motif `bc' correspond-il
+à la chaîne `abcd'.
+
+* MY_FNM_HANDLE_RANGES  implique  MY_FNM_HANDLE_CLASSES, En  pratique,
+ceci signifie que  vous n'avez pas à gérer le  cas pathologique où les
+conditions suivantes sont réunies :
+  - votre my_fnmatch sait gérer les deux drapeaux ;
+  - on l'appelle avec MY_FNM_HANDLE_RANGES mais sans MY_FNM_HANDLE_CLASSES ;
+  - on lui donne [xa-z] en motif de recherche.

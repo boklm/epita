@@ -1,0 +1,155 @@
+--------------------------------------------------------------------------
+                              EXERCICE 1
+--------------------------------------------------------------------------
+Date de rendu:			mercredi 23 Octobre 2002 - 8h00
+Répertoire de rendu:		~/c/rendu/mp/myls
+Newsgroup:			epita.cours.c-unix.ls-lR
+
+Nom:				myls
+Permissions : 			au moins 701 pour ~, ~/c et ~/c/rendu
+				700 pour les répertoires et les scripts
+				600 pour les fichiers
+--------------------------------------------------------------------------
+
+
+Description
+===========
+
+	Vous  devez écrire  un  programme myls  ayant un  comportement
+similaire à ``ls''.  L'ensemble des options à gérer  est donné dans la
+suite du sujet.
+
+    Synopsis
+    --------
+
+		myls [-laRA] [fichiers ...]
+
+    Description des options
+    -----------------------
+
+	-l	
+
+	Liste les fichiers au format long.  En plus du nom, affiche le
+type  du  fichier,  les   permissions  d'accès,  le  nombre  de  liens
+physiques,  le nom  du propriétaire  et du  groupe s'ils  existent, la
+taille en octets, et l'horodatage (de la dernière modification).
+
+	-a
+
+	Affiche  tous  les fichiers  des  répertoires,  y compris  les
+fichiers commençant par un `.'.
+
+	-R
+
+	Affiche récursivement le contenu des sous-répertoires.
+
+	-A
+
+	Affiche tous les fichiers du répertoire, sauf `.'  et `..'.
+
+
+Par ailleurs, ces options doivent pouvoir être combinées les unes avec
+les  autres (la  dernière occurence  de  `a' ou  `A' sur  la ligne  de
+commande prévaut, merci à Tristan Lanfrey pour cette précision), comme
+par exemple dans :
+
+		myls -la
+		myls -l -A
+		myls -ARal
+		myls -alRA
+
+	L'affichage  de  votre myls  doit  être  identique (à  options
+équivalentes)  à celui  de  GNU  ls, un  programme  des GNU  fileutils
+disponibles sur le compte DP.
+
+    Bonus
+    -----
+
+	L'implémentation  des options suivantes  sera sujette  à bonus
+pendant la soutenance, si tant est que le sujet de base soit correctement
+implémenté.
+
+	--color
+
+	Affiche le listing en couleurs,  selon le type du fichier.  Le
+	choix du système de  coloration est laissé à votre discrétion,
+	mais jetez un oeil sur celui  de GNU ls si vous êtes en manque
+	d'idée.   Pour créer  de  la couleur,  utilisez les  séquences
+	d'échappement ANSI  (vous ne POUVEZ pas  utiliser les termcaps
+	ni les terminfos).
+
+	-F, -1, -L, -x
+
+	Voir les indications correspondantes dans ls(1) et gnu-ls(1).
+
+Plus  le myls  final est  riche, mieux  c'est.  Soyez  inventifs.  Les
+entreprises heureuses seront justement bonifiées.
+
+
+Contraintes
+===========
+
+Vous  n'avez  droit  ni  aux  variables  globales,  ni  aux  variables
+`static' non constantes.
+
+Votre   programme   doit  évidemment   fonctionner   sur  toutes   les
+architectures de l'école.
+
+ATTENTION  : les  réponses de  la  FAQ constituent  des extensions  du
+sujet.
+
+    Fonctions autorisées
+    --------------------
+
+Votre  binaire  n'a  droit   d'utiliser  que  les  fonctions  externes
+suivantes :
+
+malloc(3) free(3) exit(3)  assert(3) opendir(3) readdir(3) closedir(3)
+chdir(2)   stat(2)   lstat(2)   getpwuid(3)  getgrgid(3)   strftime(3)
+getenv(3)   isatty(3)  perror(3)  readlink(2)   write(2)  localtime(3)
+time(3)
+
+Tout  myls surpris  en  flagrant délit  d'utilisation  de la  fonction
+scandir(3) se verra sanctionné par la note -21 (foutage de gueule).
+
+Tout  myls  surpris à  se  lier statiquement  avec  la  libc se  verra
+sanctionné  par  la  note  -63  (-42  +  -21,  triche  et  foutage  de
+gueule). Merci à ``FreeStyle'' pour cette précision.
+
+Par  ailleurs, notez  bien  qu'un appel  système  _est_ une  fonction,
+contrairement à ce  que croit flav... À moins  que vous ne connaissiez
+la convention d'appel système bas niveau de tous les systèmes cible de
+votre projet (si  vous ne comprenez pas cette  phrase, tenez-vous en à
+la première). Bref, essayez de respecter l'esprit de l'exercice.
+
+
+Enfin,  on  vous  rappelle  que malgré  l'interdiction  d'en  utiliser
+n'importe  quelle fonction,  vous  avez le  droit  d'inclure tous  les
+en-têtes de  déclaration standards et d'en utiliser  les constantes et
+les types (NULL, EOF, size_t, off_t, struct tm, struct stat, DIR, ...)
+
+    Modalités de rendu
+    ------------------
+
+Votre rendu doit se conformer au  CSS, au moins en ce qui concerne les
+aspects suivants :
+
+- mise en forme du code source
+- composition du fichier Makefile et afférents
+- fichier AUTHORS
+
+Toutes les fonctions nécessaires a la compilation doivent être situées
+dans le répertoire de rendu  ou des sous-répertoire : le répertoire de
+rendu  doit être  autonome et  les fichiers  de contrôle  (Makefile et
+autres scripts éventuels) doivent se trouver à sa base.
+
+Astuce:   disposez  votre   libmy   et/ou  votre   liblist  dans   des
+sous-répertoires, avec des règles de Makefile correspondantes.
+
+
+Les sources  doivent être inaccessibles par  d'autres utilisateurs, et
+le  rendu  se fera  par  archive  cryptée,  en utilisant  la  commande
+suivante :
+
+	 ~acu/mbin/rendu.sh mp myls
+

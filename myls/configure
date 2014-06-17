@@ -1,0 +1,38 @@
+
+
+case `uname -s` in
+  OSF* )
+    CC=cc
+    WARN='-std1 -w1 -warnprotos'
+    OPTI='-O5'
+    SHFLAGS='-fPIC -DPIC'
+    ;;
+  SunOS* )
+    CC=cc
+    WARN='-Xc'
+    OPTI='-xO5'
+    SHFLAGS='-KPIC -DPIC'
+    ;;
+  * )
+    # check for gcc presence
+    if gcc --version >/dev/null 2>&1; then
+      CC=gcc
+      WARN='-Wall -W -Wno-unused -ansi'
+      OPTI='-O3 -fomit-frame-pointer'
+      SHFLAGS='-fPIC -DPIC'
+    else
+      CC=cc
+      WARN=''
+      OPTI=''
+    fi
+    ;;
+esac
+
+OUT=Makefile-rules.make
+echo >"$OUT"
+echo "CC = $CC" >>"$OUT"
+echo "WARN = $WARN" >>"$OUT"
+echo "OPTI = $OPTI" >>"$OUT"
+echo "SHFLAGS = $SHFLAGS" >>"$OUT"
+echo "MACHTYPE = `uname -m`" >>"$OUT"
+echo "HOSTTYPE = `uname -s`" >>"$OUT"

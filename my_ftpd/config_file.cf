@@ -1,0 +1,14 @@
+
+# Config file for RushFTPD v0.01a
+
+# welcomemsg is the message witch wil be send when someone
+# connect to the server.
+welcomemsg=Welcome ---------------
+
+# put 0 or 1 to allow anonymous mode.
+anonymousmode=1
+
+# The file where you want to log
+logfile=/goinfre/RushFTPD.log
+loglevel=0
+

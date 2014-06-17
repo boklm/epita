@@ -1,0 +1,184 @@
+USER NAME (USER)
+
+            The argument field is a Telnet string identifying the user.
+            The user identification is that which is required by the
+            server for access to its file system.  This command will
+            normally be the first command transmitted by the user after
+            the control connections are made (some servers may require
+            this).  Additional identification information in the form of
+            a password and/or an account command may also be required by
+            some servers.  Servers may allow a new USER command to be
+            entered at any point in order to change the access control
+            and/or accounting information.  This has the effect of
+            flushing any user, password, and account information already
+            supplied and beginning the login sequence again.  All
+            transfer parameters are unchanged and any file transfer in
+            progress is completed under the old access control
+            parameters.
+
+
+
+PASSWORD (PASS)
+
+            The argument field is a Telnet string specifying the user's
+            password.  This command must be immediately preceded by the
+            user name command, and, for some sites, completes the user's
+            identification for access control.  Since password
+            information is quite sensitive, it is desirable in general
+            to "mask" it or suppress typeout.  It appears that the
+            server has no foolproof way to achieve this.  It is
+            therefore the responsibility of the user-FTP process to hide
+            the sensitive password information.
+
+
+
+LOGOUT (QUIT)
+
+            This command terminates a USER and if file transfer is not
+            in progress, the server closes the control connection.  If
+            file transfer is in progress, the connection will remain
+            open for result response and the server will then close it.
+            If the user-process is transferring files for several USERs
+            but does not wish to close and then reopen connections for
+            each, then the REIN command should be used instead of QUIT.
+
+            An unexpected close on the control connection will cause the
+            server to take the effective action of an abort (ABOR) and a
+            logout (QUIT).
+
+
+
+CHANGE WORKING DIRECTORY (CWD)
+
+            This command allows the user to work with a different
+            directory or dataset for file storage or retrieval without
+            altering his login or accounting information.  Transfer
+            parameters are similarly unchanged.  The argument is a
+            pathname specifying a directory or other system dependent
+            file group designator.
+
+
+
+PRINT WORKING DIRECTORY (PWD)
+  
+            This command causes the name of the current working
+            directory to be returned in the reply.  See Appendix II.
+
+
+
+LIST (LIST)
+
+            This command causes a list to be sent from the server to the
+            passive DTP.  If the pathname specifies a directory or other
+            group of files, the server should transfer a list of files
+            in the specified directory.  If the pathname specifies a
+            file then the server should send current information on the
+            file.  A null argument implies the user's current working or
+            default directory.  The data transfer is over the data
+            connection in type ASCII or type EBCDIC.  (The user must
+	    ensure that the TYPE is appropriately ASCII or EBCDIC).	   
+            Since the information on a file may vary widely from system
+            to system, this information may be hard to use automatically
+            in a program, but may be quite useful to a human user.
+
+
+
+HELP (HELP)
+
+            This command shall cause the server to send helpful
+            information regarding its implementation status over the
+            control connection to the user.  The command may take an
+            argument (e.g., any command name) and return more specific
+            information as a response.  The reply is type 211 or 214.
+            It is suggested that HELP be allowed before entering a USER
+            command. The server may use this reply to specify
+            site-dependent parameters, e.g., in response to HELP SITE.
+
+
+
+STATUS (STAT)
+
+            This command shall cause a status response to be sent over
+            the control connection in the form of a reply.  The command
+            may be sent during a file transfer (along with the Telnet IP
+            and Synch signals--see the Section on FTP Commands) in which
+            case the server will respond with the status of the
+            operation in progress, or it may be sent between file
+            transfers.  In the latter case, the command may have an
+            argument field.  If the argument is a pathname, the command
+            is analogous to the "list" command except that data shall be
+	    transferred over the control connection.  If a partial
+            pathname is given, the server may respond with a list of
+            file names or attributes associated with that specification.
+            If no argument is given, the server should return general
+            status information about the server FTP process.  This
+            should include current values of all transfer parameters and
+            the status of connections.
+
+
+
+SYSTEM (SYST)
+
+            This command is used to find out the type of operating
+            system at the server.  The reply shall have as its first
+            word one of the system names listed in the current version
+            of the Assigned Numbers document [4].
+
+
+MAKE DIRECTORY (MKD)
+
+            This command causes the directory specified in the pathname
+            to be created as a directory (if the pathname is absolute)
+            or as a subdirectory of the current working directory (if
+            the pathname is relative).  See Appendix II.
+
+
+
+SITE PARAMETERS (SITE)
+
+            This command is used by the server to provide services
+            specific to his system that are essential to file transfer
+            but not sufficiently universal to be included as commands in
+            the protocol.  The nature of these services and the
+            specification of their syntax can be stated in a reply to
+            the HELP SITE command.
+
+
+
+REMOVE DIRECTORY (RMD)
+
+            This command causes the directory specified in the pathname
+            to be removed as a directory (if the pathname is absolute)
+            or as a subdirectory of the current working directory (if
+            the pathname is relative).  See Appendix II.
+
+
+
+DELETE (DELE)
+
+            This command causes the file specified in the pathname to be
+            deleted at the server site.  If an extra level of protection
+            is desired (such as the query, "Do you really wish to
+            delete?"), it should be provided by the user-FTP process.
+
+
+
+STORE (STOR)
+
+            This command causes the server-DTP to accept the data
+            transferred via the data connection and to store the data as
+            a file at the server site.  If the file specified in the
+            pathname exists at the server site, then its contents shall
+            be replaced by the data being transferred.  A new file is
+            created at the server site if the file specified in the
+            pathname does not already exist.
+
+
+
+RETRIEVE (RETR)
+
+            This command causes the server-DTP to transfer a copy of the
+            file, specified in the pathname, to the server- or user-DTP
+            at the other end of the data connection.  The status and
+            contents of the file at the server site shall be unaffected.
+nnection.  The statu

@@ -1,0 +1,4 @@
+epcvs ci [-m commentaire sur les modif] <nom de fichier>  // pour envoyer les fichiers
+epcvs up // pour recup les dernier fichier
+epcvs add <nom de fichier> // emvoyer un new fichier
+epcvs remove <nom de fichier> // pour supp un fichier

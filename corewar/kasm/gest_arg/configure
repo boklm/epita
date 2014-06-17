@@ -1,0 +1,41 @@
+#!/bin/sh
+## configure for  in /u/a1/lecorn_o/c/rendu/proj/corewar/asm
+##
+## Made by olivier lecornet
+## Login   <lecorn_o@epita.fr>
+##
+## Started on  Wed Nov  6 16:11:55 2002 olivier lecornet
+## Last update Wed Dec 11 08:24:29 2002 olivier lecornet
+##
+
+case `uname -s` in
+  OSF* )
+    CC=gcc
+    WARN='-Wall -W -Werror -ansi'
+    ARCH='-DALPHA'
+    ;;
+  SunOS* )
+    CC=gcc
+    WARN='-Wall -W -Werror -ansi'
+    ARCH='-DSUN'
+    ;;
+  * )
+# check for gcc presence
+    if gcc --version >/dev/null 2>&1; then
+      CC=/u/dp/public/arch/i386-NetBSD/bin/gcc-3.2
+      WARN='-Wall -pedantic -std=c99'
+      ARCH='-DBSD'
+  else
+      CC=cc
+      WARN=''
+      DYN=''
+      ARCH=
+    fi
+    ;;
+esac
+
+OUT=Makefile-rules.make
+echo >"$OUT"
+echo "CC = $CC" >>"$OUT"
+echo "WARN = $WARN" >>"$OUT"
+echo "ARCH = $ARH" >>"$OUT"

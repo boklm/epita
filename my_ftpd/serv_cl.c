@@ -1,0 +1,128 @@
+/*
+** serv_cl.c for my_ftpd in /u/a1/vigier_n/c/rendu/mp/my_ftpd
+**
+** Made by nicolas vigier
+** Login   <vigier_n@epita.fr>
+**
+** Started on  Sat Nov 30 22:16:46 2002 nicolas vigier
+** Last update Wed Dec  4 07:52:08 2002 nicolas vigier
+*/
+
+#include <sys/socket.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include "main_serv.h"
+#include "serv_cl.h"
+#include "strutils.h"
+#include "readln.h"
+#include "cmd.h"
+#include "cmd_port.h"
+#include "cmd_list.h"
+#include "cmd_stor.h"
+#include "cmd_retr.h"
+#include "cmd_type.h"
+#include "cmd_pasv.h"
+#include "cmd_quit.h"
+#include "cmd_cwd.h"
+#include "cmd_pwd.h"
+#include "cmd_dele.h"
+#include "cmd_help.h"
+#include "cmd_mkd.h"
+#include "cmd_rmd.h"
+#include "cmd_setpass.h"
+#include "cmd_setuser.h"
+#include "cmd_unknow.h"
+#include "cmd_syst.h"
+#include "logging.h"
+
+static void	print_welcomemsg(t_ftpserv *ftpserv, t_client *client);
+
+static void	print_welcomemsg(t_ftpserv *ftpserv, t_client *client)
+{
+  send(client->fd, "220 ", 4, 0);
+  send(client->fd, ftpserv->welcomestr, strlen(ftpserv->welcomestr), 0);
+  send(client->fd, "\r\n", 2, 0);
+}
+
+static int	compare_cmd(char *arg, char *cmd)
+{
+  int	i;
+
+  return (!strncasecmp(arg, cmd, i = strlen(cmd)) &&
+	  (arg[i] == ' ' || arg[i] == '\r'));
+}
+
+
+static int	cmd_grp2(t_ftpserv *ftpserv, t_client *client, char *cmd)
+{
+  if (!strncasecmp(cmd, "retr ", 5))
+    cmd_retr(ftpserv, client, cmd + 5);
+  else if (!strncasecmp(cmd, "mkd ", 4))
+    cmd_mkd(ftpserv, client, cmd + 4);
+  else if (!strncasecmp(cmd, "rmd ", 4))
+    cmd_rmd(ftpserv, client, cmd + 4);
+  else if (!strncasecmp(cmd, "dele ", 5))
+    cmd_dele(ftpserv, client, cmd + 5);
+  else if (!strncasecmp(cmd, "type ", 5))
+    cmd_type(ftpserv, client, cmd + 5);
+  else if (!strncasecmp(cmd, "pasv", 4))
+    cmd_pasv(ftpserv, client, cmd + 4);
+  else if (!strncasecmp(cmd, "syst", 4))
+    cmd_syst(ftpserv, client, cmd + 4);
+  else
+    return 0;
+  return 1;
+}
+
+static int	cmd_grp1(t_ftpserv *ftpserv, t_client *client, char *cmd)
+{
+  if (!strncasecmp(cmd, "user ", 5))
+    cmd_setuser(ftpserv, client, cmd + 5);
+  else if (!strncasecmp(cmd, "pass ", 5))
+    cmd_setpass(ftpserv, client, cmd + 5);
+  else if (!strncasecmp(cmd, "help", 4))
+    cmd_help(ftpserv, client, cmd + 4);
+  else if (!strncasecmp(cmd, "cwd ", 4))
+    cmd_cwd(ftpserv, client, cmd + 4);
+  else if (!strncasecmp(cmd, "pwd", 3))
+    cmd_pwd(ftpserv, client, cmd + 3);
+  else if (!strncasecmp(cmd, "quit", 4))
+    cmd_quit(ftpserv, client, cmd + 4);
+  else if (!strncasecmp(cmd, "port ", 5))
+    cmd_port(ftpserv, client, cmd + 5);
+  else if (!strncasecmp(cmd, "list", 4))
+    cmd_list(ftpserv, client, cmd + 3);
+  else if (!strncasecmp(cmd, "stor ", 5))
+    cmd_stor(ftpserv, client, cmd + 5);
+  else
+    return 0;
+  return 1;
+}
+
+int	serv_cl(t_ftpserv *ftpserv, t_client *client)
+{
+  char	*cmd;
+  char	*tmp;
+
+  print_welcomemsg(ftpserv, client);
+  while (client->noexit)
+    {
+      if (!(tmp = cmd = readln(client->fd, '\r')))
+	break ;
+      if (ftpserv->set_verbose)
+	printf("%i:cmd: %s\n", client->fd, cmd);
+      logline(ftpserv, 3, "user ^ executed cmd: ^\n", client->username, cmd);
+      cmd = remove_lspace(cmd);
+      if (!cmd_grp1(ftpserv, client, cmd) &&
+	  !cmd_grp2(ftpserv, client, cmd))
+	cmd_unknown(ftpserv, client, cmd);
+      free(tmp);
+    }
+  if (ftpserv->set_verbose)
+    printf("Exit %i\n", client->fd);
+  shutdown(client->fd, SHUT_RDWR);
+  close(client->fd);
+  return 1;
+}

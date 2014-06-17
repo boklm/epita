@@ -1,0 +1,73 @@
+#!/bin/sh
+## configure.sh for corewar in /u/a1/legros_b/c/rendu/proj/corewar
+##
+## Made by bruno legros
+## Login   <legros_b@epita.fr>
+##
+## Started on  Thu Oct 17 14:03:00 2002 bruno legros
+## Last update Sun Dec 22 18:01:58 2002 olivier lecornet
+##
+
+
+if [ $# -eq 1 ] && [ $1 = "bonus" ]
+    then
+    BONUS='-DBONUS'
+fi
+
+case `uname -s` in
+  OSF* )
+    CC=gcc#'/u/dp/public/arch/`uname -m`-`uname -s`/bin/gcc-3.2'
+    WARN='-Wall -W -pedantic'
+    LDDEBUG=''
+    RM='gnu-rm -f'
+    DEF='-DOSF -DSUN=0'
+    OPTI='-O3 -fomit-frame-pointer'
+    LIB_=''
+    ;;
+  SunOS* )
+    CC=gcc#'/u/dp/public/arch/`uname -m`-`uname -s`/bin/gcc-3.2'
+    WARN='-Wall -W -pedantic'
+    LDDEBUG=''
+    DEF='-DSUN=1'
+    RM='rm -f'
+    OPTI='-fomit-frame-pointer'
+    LIB_=''
+    ;;
+  NetBSD* )
+    CC='/u/dp/public/arch/`uname -m`-`uname -s`/bin/gcc-3.2'
+    WARN='-Wall -W -pedantic -std=c99'
+    LDDEBUG=''
+    DEF='-DNETBSD -DSUN=0'
+    RM='rm -f'
+    OPTI='-fomit-frame-pointer'
+    LIB_=#'-L/u/dp/public/arch/`uname -m`-`uname -s`/lib -lefence'
+    ;;
+  * )
+    # check for gcc presence
+    if gcc --version >/dev/null 2>&1; then
+      CC=gcc
+      WARN='-Wall -W -ansi -pedantic -std=c99'
+      LDDEBUG='-ggdb3'
+      DEF='-D__USE_BSD -DSUN=0'
+      RM='rm -f'
+      OPTI='-O3 -fomit-frame-pointer'
+      LIB_='-lefence'
+    else
+      CC=cc
+      WARN=''
+      LDDEBUG=''
+      RM='rm -f'
+    fi
+    ;;
+esac
+
+OUT=Makefile-rules.make
+echo > "$OUT"
+echo "CC = $CC" >>"$OUT"
+echo "WARN = $WARN" >>"$OUT"
+echo "LDDEBUG = $LDDEBUG" >>"$OUT"
+echo "DEF = $DEF" >>"$OUT"
+echo "RM = $RM" >>"$OUT"
+echo "OPTI = $OPTI" >> "$OUT"
+echo "LIB_ = $LIB_" >> "$OUT"
+echo "BONUS = $BONUS" >> "$OUT"

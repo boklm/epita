@@ -1,0 +1,12 @@
+#!/bin/sh
+## configure for  in /u/a1/lecorn_o/c/rendu/proj/corewar/asm
+##
+## Made by olivier lecornet
+## Login   <lecorn_o@epita.fr>
+##
+## Started on  Wed Nov  6 16:11:55 2002 olivier lecornet
+## Last update Sat Dec 21 18:59:31 2002 nicolas vigier
+##
+
+(cd kasm ; ./configure $@)
+(cd vm ; ./configure $@)

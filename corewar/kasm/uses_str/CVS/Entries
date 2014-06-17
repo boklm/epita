@@ -1,0 +1,27 @@
+/Makefile/1.5/Sun Dec 22 12:15:16 2002//
+/getln.c/1.1/Sat Dec 21 10:04:25 2002//
+/my_isdigit.c/1.2/Sat Dec 21 12:22:19 2002//
+/my_isupper.c/1.1/Sun Dec 22 11:28:42 2002//
+/my_putchar.c/1.1/Sun Dec 22 12:15:17 2002//
+/my_putchar.h/1.1/Sun Dec 22 12:15:17 2002//
+/my_putnbr.c/1.1/Sun Dec 22 12:15:17 2002//
+/my_putnbr.h/1.1/Sun Dec 22 12:15:18 2002//
+/my_putstr.c/1.1/Sun Dec 22 11:39:39 2002//
+/my_putstr.h/1.1/Sun Dec 22 11:39:39 2002//
+/my_putstrnbr.c/1.1/Sun Dec 22 12:15:18 2002//
+/my_putstrnbr.h/1.1/Sun Dec 22 12:15:19 2002//
+/my_putstrstr.c/1.1/Sun Dec 22 12:15:21 2002//
+/my_putstrstr.h/1.1/Sun Dec 22 12:15:22 2002//
+/my_strcasecmp.c/1.1/Sat Dec 21 11:15:45 2002//
+/my_strcat.c/1.2/Sat Dec 21 15:43:48 2002//
+/my_strcmp.c/1.1/Sat Dec 21 10:04:25 2002//
+/my_strcpy.c/1.1/Sat Dec 21 10:04:25 2002//
+/my_strdup.c/1.1/Sat Dec 21 10:04:25 2002//
+/my_strlen.c/1.1/Sat Dec 21 10:04:25 2002//
+/my_strncmp.c/1.1/Sat Dec 21 10:04:25 2002//
+/my_strncpy.c/1.1/Sat Dec 21 10:04:26 2002//
+/my_system.c/1.1/Sat Dec 21 10:04:26 2002//
+/my_system.h/1.1/Sat Dec 21 10:04:26 2002//
+/my_tolower.c/1.1/Sat Dec 21 11:15:45 2002//
+/uses_str.h/1.4/Sun Dec 22 12:15:22 2002//
+D

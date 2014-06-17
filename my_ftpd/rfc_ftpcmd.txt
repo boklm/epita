@@ -1,0 +1,15 @@
+USER <SP> <username> <CRLF>
+PASS <SP> <password> <CRLF>
+QUIT <CRLF>
+CWD  <SP> <pathname> <CRLF>
+PWD  <CRLF>
+LIST [<SP> <pathname>] <CRLF>
+HELP [<SP> <string>] <CRLF>
+STAT [<SP> <pathname>] <CRLF>
+SYST <CRLF>
+SITE <SP> <string> <CRLF>
+MKD  <SP> <pathname> <CRLF>
+RMD  <SP> <pathname> <CRLF>
+DELE <SP> <pathname> <CRLF>
+STOR <SP> <pathname> <CRLF>
+RETR <SP> <pathname> <CRLF>

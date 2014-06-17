@@ -1,0 +1,229 @@
+ 
+                                  __ _              _  ____
+            _ __ ___  _   _      / _| |_ _ _    __ | |/ /\ \
+           | '_ ` _ \| | | |    | |_| __| '_ \ /  \| | |  | |
+           | | | | | | |_| |    |  _| |_| |_) | () | | |  | |
+           |_| |_| |_|\__, |____|_|  \__| .__/ \___|_| |  | |
+                      |___/_____        |_|           \_\/_/
+ 
+
+
+ Groupe de News:			epita.cours.c-unix.a1
+ Date de rendu:			mercredi 4 décembre 2002 - 08:00:42
+ Répertoire de rendu:		~/c/rendu/mp/my_ftpd
+ Droits sur le rep et les exos:	700 sur ~/c/rendu/mp/ et ~/c/rendu/mp/my_ftpd
+ 				700 pour les scripts tels que configure
+ 				600 pour les fichiers
+ 				o+x ~/ ~/c/ ~/c/rendu/
+ 
+ 
+ -------------------------------------------------------------------------------
+ Syscalls, fonctions et macros autorisées
+ -------------------------------------------------------------------------------
+
+  Vous avez droit à toutes les fonctions vues en cours jusqu'à maintenant, _sauf_:
+
+   * scandir(3)
+   * sprintf(3), snprintf(3)
+   * select(2) (sauf pour le niveau 3, c est a dire pour gerer la console)
+
+  Vous devrez être capables de justifier de l'utilisation de chaque fonction
+  qui ne provient pas de votre code.
+ 
+ -------------------------------------------------------------------------------
+ Manuels recommandés
+ -------------------------------------------------------------------------------
+ 
+ ftpd(1) ftp(1)
+ 
+ 
+ -------------------------------------------------------------------------------
+ Description
+ -------------------------------------------------------------------------------
+  _____________
+ < c'est parti >
+  -------------
+         \   ^__^
+          \  (oo)\_______
+             (__)\       )\/\
+                 ||----w |
+                 ||     ||
+ 
+ Le but de ce sujet est de vous faire découvrir le monde des réseaux et
+ donc des socket(2).
+
+ Le sujet si vous l'acceptez (on me fait signe que vous avez pas le choix)
+ sera de créer par groupe de deux personnes un serveur FTP pour partager
+ des fichiers avec le monde. On devra pouvoir s'y connecter avec n'importe
+ quel client FTP existant (ftp, lftp, gftp...). Vous devrez donc lire
+ attentivement la RFC (Request for Comments) que vous trouverez sur
+ Internet, par exemple sur le site de l'IETF. Votre serveur devra donc être
+ conforme aux RFC actuellement en vigueur.
+
+ Ce message ne s'auto-détruira que dans une semaine, alors courage et bonne
+ lecture...
+
+ 
+ -------------------------------------------------------------------------------
+ Niveau 1
+ -------------------------------------------------------------------------------
+  ______________________________________________________
+ < allez un peu de courage, c'est que le premier niveau >
+  ------------------------------------------------------
+         \   ^__^
+          \  (..)\_______
+             (__)\       )\/\
+                 ||----w |
+                 ||     ||
+ 
+ Vous devez donc créer un programme qui écoute sur un port pour recevoir
+ des connexions de clients eventuels. Le port sera lu en argument.
+ Les utilisateurs pouvant se connecter au serveur devront être au préalable
+ enregistrés dans un fichier nommé "users.db" se trouvant dans le même
+ répertoire que votre programmme (~/c/rendu/mp/my_ftpd/users.db). Il sera
+ de la forme suivante :
+ login:encrypted_pass:homedirectory.
+ Pour crypter les mots de passe, vous devez utiliser la fonction crypt(3).
+ De base, vous devez donc gérer les options suivantes :
+    -a	  : n'accepter que les connections anonymes
+	    (les utilisateurs "anonymous" ou "ftp",
+	    ayant pour mot de passe... n'importe quelle chaine
+	    de caractères...)
+    -v	  : se mettre en mode verbose
+    -V	  : afficher sa version et quitter
+    -p <n>: lancer le serveur sur le port <n>
+
+ Les fonctionnalités à gérer de base sont les suivantes :
+    - les commandes USER, PASS, QUIT, CWD, PWD, LIST, HELP, STAT, SYST,
+      SIZE, MKD, RMD, DELE, STOR, RETR
+    - transfert en mode actif (PORT)
+    - transfert de données binaire et ascii (TYPE)
+    - gestion avancées des "file descriptor" (si un client se déconnecte
+      sauvagement, ne pas garder le fd ouvert pour rien !
+
+ 
+ -------------------------------------------------------------------------------
+ Niveau 2
+ -------------------------------------------------------------------------------
+  _______________________________________________________
+ < allez encore un effort, vous etes presque a la moitie >
+  -------------------------------------------------------
+         \   ^__^
+          \  (xx)\_______
+             (__)\       )\/\
+              U  ||----w |
+                 ||     ||
+ 
+ A ce niveau, vous devez gérer un fichier de configuration nommé
+ "ftpd.conf" propre où l'on pourra avoir des commentaires (ligne commençant
+ par '#' jusqu'à la fin). Vous y mettrez toutes les informations que vous
+ avez besoin pour faire fonctionner votre serveur bien qu'il puisse et
+ DOIVE fonctionner sans. Vous êtes donc libre dans les informations que
+ vous y stockerez.
+ On pourra toutefois passer en argument un autre fichier de configuration
+ conforme à votre parseur (évidemment, on n'est pas méchant non plus) à
+ l'aide de l'option -f.
+ ex:
+	$./my_ftpd -f ~acu/ftpd.cf
+
+ Vous devrez aussi gérer le mode passif (PASV), ainsi qu'un journal de
+ connections. Pour se faire, une option supplémentaire en ligne de commande
+ devra être implémentée :
+    -U[n] <file>: tenir un journal de chaque connection dans le fichier
+		  <file>.
+		  Pour n = 0, vous ajouterez simplement dans le journal la
+		  ligne suivante : user <username> logged in on <date>.
+		  Pour n > 0, à vous d'être inventifs :)
+
+ 
+ -------------------------------------------------------------------------------
+ Niveau 3
+ -------------------------------------------------------------------------------
+  ________________________________________
+ / vous etes encore vivant ? encore une   \
+ | etape et vous eclatez tous les scores. |
+ \ A VOUS LES POINTS !!                   /
+  ----------------------------------------
+         \   ^__^
+          \  ($$)\_______
+             (__)\       )\/\
+                 ||----w |
+                 ||     ||
+ 
+ Bon vous en voulez encore ? Bon bon, alors si vous insistez...
+
+ On pourra sur votre serveur avoir une console d'administration où l'on
+ saisira des commandes de votre choix, par exemple :
+    - la liste des personnes connectées,
+    - l'accès au log,
+    - l'ajout, suppression, édition de nouveaux utilisateurs
+    - le contrôle des connections (pouvoir déconnecter quelqu'un par
+      exemple).
+    - autre (à vous de voir)
+ Les couleurs, ou tout autre détails graphiques seront appréciés par vos
+ amis les ACUs, bien que notre attention se portera de préférences sur les
+ fonctionnalités du serveur et son bon fonctionnement.
+
+ 
+ -------------------------------------------------------------------------------
+ Bonus
+ -------------------------------------------------------------------------------
+
+ - gestion du FXP
+ - gestion EPSV et EPRT
+ - gestion de l'IPv6 - RFC (2428) ;)
+ - une interface graphique à la Serv-U pourquoi pas (Termio, ncurses , GTK sont vos
+   amis et plus si vous le souhaitez...)
+
+ 
+ -------------------------------------------------------------------------------
+ Modalités de rendus et contraintes
+ -------------------------------------------------------------------------------
+ 
+ Votre répertoire de rendu doit contenir vos sources, un fichier Makefile, et
+ optionnellement un script configure, ou un fichier Rules.make, ...
+ 
+ Votre Makefile doit construire un binaire nommé "my_ftpd".
+ 
+ Evidemment comme l'impose la norme ("tout fichier C doit avoir son header
+ correspondant"). Vous pouvez utiliser plusieurs fichiers C et H pour
+ implementer votre mini-projet -c'est d'ailleurs conseille-.
+
+ Les tests susceptibles d'etre effectues par la moulinette de correction
+ appartiennent a l'ensemble des tests qui ne produisent pas de warnings avec
+ gcc et les options "-Wall -W -pedantic -std=c99". Attention, seul gcc 3.x
+ gère le standard c99; une version 3.2 est dispo ici:
+
+ 	/u/dp/public/arch/i386-NetBSD/bin/gcc-3.2
+ 
+ Les autres modalites de rendu (regles de Makefile, options de compilation),
+ ainsi que vos sources, doivent etre conformes aux specifications
+ correspondantes du CSS << norme >>.
+ 
+ Note: N'oubliez pas le fichier AUTHORS, specifie dans le CSS.
+ 
+ -------------------------------------------------------------------------------
+ Archive de rendu
+ -------------------------------------------------------------------------------
+ 
+ Une fois que vous avez termine votre travail, vous devez rendre vos sources
+ dans le fichier :
+ 
+ 	~/c/rendu/$USER-mp-my_ftpd.tar.gz.gpg
+ 
+ Pour generer ce fichier, utilisez le script ~acu/mbin/rendu.sh, comme suit :
+ 
+ 	~acu/mbin/rendu.sh mp my_ftpd
+ 
+ Attention: Cette archive doit etre lisible par tout le monde.
+ 
+ 
+ -------------------------------------------------------------------------------
+ Rappels
+ -------------------------------------------------------------------------------
+ 
+ Avant de poser une question sur les news, reflechissez, relisez le passage
+ correspondant dans le sujet et dans les manuels fournis.
+ 
+ Tout ce qui n'est pas explicitement demande n'est pas a faire.
+ 

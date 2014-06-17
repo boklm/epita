@@ -1,0 +1,52 @@
+#! /bin/sh
+## configure for my_ftpd in .
+##
+## Made by jean-yves tourtet
+## Login   <tourte_j@epita.fr>
+##
+## Started on  Fri Nov 29 21:13:22 2002 jean-yves tourtet
+## Last update Wed Dec  4 06:07:10 2002 nicolas vigier
+##
+
+case `uname -s` in
+    OSF* )
+	CC=cc
+	WARN='-std1 -w1 -warnprotos'
+	OPTI='-O5'
+	SHFLAGS='-fPIC -DPIC'
+	ARCHLIBS=''
+	;;
+    SunOS* )
+	CC=cc
+	WARN='-Xc'
+	OPTI='-xO5'
+	SHFLAGS='-KPIC -DPIC'
+	ARCHLIBS='-lsocket -lnsl'
+	;;
+    * )
+     # check for gcc presence
+	if gcc --version >/dev/null 2>&1; then
+	    CC=gcc
+	    WARN='-Wall -W -Wno-unused -ansi'
+	    OPTI='-O3 -fomit-frame-pointer'
+	    SHFLAGS='-fPIC -DPIC'
+	    ARCHLIBS=''
+	    ARCHLIBS='-lcrypt'
+	else
+	    CC=cc
+	    WARN=''
+	    OPTI=''
+	    ARCHLIBS=''
+	fi
+	;;
+esac
+
+OUT=Makefile-rules.make
+echo >"$OUT"
+echo "CC = $CC" >>"$OUT"
+echo "WARN = $WARN" >>"$OUT"
+echo "OPTI = $OPTI" >>"$OUT"
+echo "SHFLAGS = $SHFLAGS" >>"$OUT"
+echo "MACHTYPE = `uname -m`" >>"$OUT"
+echo "HOSTTYPE = `uname -s`" >>"$OUT"
+echo "ARCHLIBS = $ARCHLIBS" >> "$OUT"

@@ -1,0 +1,153 @@
+Groupe de News:			epita.cours.c-unix.mini-projs
+Date de rendu:			mercredi 20 novembre 2002 - 08:00:42
+Répertoire de rendu:		~/c/rendu/mp/minishell
+Droits sur le rep et les exos:	700 sur ~/c/rendu/mp/ et ~/c/rendu/mp/minishell
+ 				700 pour les scripts tels que configure
+ 				600 pour les fichiers
+ 				o+x ~/ ~/c/ ~/c/rendu/
+
+
+Introduction
+============
+
+	When you log into a computer, it must provide you with some
+	kind of interface
+
+						  -- the shell. 
+
+	That name came from the first version of Unix
+
+		-- Kernighan and Ritchie described a "shell" in their
+                   first paper about Unix.
+
+Robustesse
+==========
+
+		En aucun cas, votre programme ne doit générer d'erreur
+		qu'il ne peut contrôler  (segv, bus, etc...).  Si l'un
+		des   cas  ci-dessus   se  présente   lors   de  votre
+		soutenance, vous  vous verrez sanctionné de  la note 0
+		si vous n'etes pas  capable de résoudre le probléme en
+		moins de 2 minutes.
+
+
+Mini ligne de commande
+======================
+
+		Votre minishell devra gérer l'execution de commandes
+		de base, la simple direction, la double redirection et
+		la simple indirection.
+
+		Votre minishell devra donc être capable de gérer dans
+		un premier temps des expressions tel que :
+
+		$ ls -la
+		$ echo login_x > AUTHORS
+		$ ypcat passwd >> users_list
+		$ < users_list wc -l
+
+Pipe
+====
+
+		$ ls | more
+
+Background
+==========
+
+		En terminant  la commande par un '&',  la commande est
+		activé  de façon  asynchrone  pour l'utilisateur.   Le
+		shell  crée un  job en  tache de  fond  (Attention aux
+		zombies).
+
+		$ emacs & 
+
+Builtins 
+========
+
+		Vous  devrez implémenter  quelques  builtins de  base,
+		telles que :
+
+		       echo
+		       cd
+		       kill
+		       exit
+
+		Les  builtins devront être  disponibles sous  forme de
+		librairies  dynamiques  respectivement  chargeable  et
+		déchargeables  par les  builtins load  et  unload, qui
+		elles sont bien entendu liées statiquement.
+
+		$ load kill.so
+
+Ligne de commande avancée
+=========================
+
+		$ ls -l -a -F | cat | grep ^drw
+		$ ypcat passwd | grep /a1 > a1_list 
+		$ < /etc/passwd cat -n | grep -v root | grep sbin > /tmp/out 2> /dev/null
+
+Bonus
+=====
+	- gestion du <<, par exemple :
+	
+		  $ cat << EOF > titi
+
+	- gestion du && et du ||
+
+		  $ true && echo OK
+		  OK
+		  $ false || echo OK
+		  OK
+
+	- utilisation de execve(2) a la place de execvp(3)
+
+	- documentation
+
+		  $ man minishell
+
+Syscalls, fonctions et macros autorisees
+========================================
+
+read(2), write(2)
+open(2), close(2)
+dup(2), dup2(2)
+pipe(2)
+fork(2)
+chdir(2)
+stat(2)
+kill(2)
+wait*(2) et les macros associées de sys/wait.h
+execve(2)
+
+exec*(3), getenv(3), setenv(3)
+malloc(3), free(3) 
+assert(3), perror(3), exit(3)
+dlopen(3), dlsym(3), dlclose(3), dlerror(3)
+
+sigaction(2), sigprocmask(3)
+
+unlink(2), mkstemp(3)
+
+Modalités de rendu
+==================
+
+	Votre  rendu doit  se conformer  au CSS,  au moins  en  ce qui
+	concerne les aspects suivants :
+
+		- mise en forme du code source
+		- composition du fichier Makefile et afférents
+		- fichier AUTHORS
+
+	Toutes les fonctions nécessaires a la compilation doivent être
+	situées dans  le répertoire de rendu ou  des sous-répertoire :
+	le répertoire de  rendu doit être autonome et  les fichiers de
+	contrôle  (Makefile et  autres scripts  éventuels)  doivent se
+	trouver à sa base.
+
+	Les   sources   doivent   être  inaccessibles   par   d'autres
+	utilisateurs,  et le  rendu se  fera par  archive  cryptée, en
+	utilisant la commande suivante :
+
+		  ~acu/mbin/rendu.sh mp minishell
+
+

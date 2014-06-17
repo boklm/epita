@@ -1,0 +1,12 @@
+case `uname -s` in
+  SunOS* )
+    LIBS='-ldl'
+    ;;
+  * )
+    LIBS=''
+    ;;
+esac
+
+OUT=Makefile-rules.make
+echo >"$OUT"
+echo "LIBS = $LIBS" >> "$OUT"
